@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Projet cinéma</title>
+    <!-- Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+  	<!-- JQuery (utilisé par bootstrap) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    
+    <!-- Riot.js-->
+    <script type="riot" src="app.riot"></script>
+    <script type="riot" src="app-main.riot"></script>
+    <script type="riot" src="detailFilm.riot"></script>
+   
+    
+	  <script src="https://cdn.jsdelivr.net/npm/riot@6.1.2/riot+compiler.min.js"></script> <!-- Compilateur-->
+    <script src="https://unpkg.com/@riotjs/route/route.js"></script> <!-- Route-->
+
+    <!-- JS-->
+    <script src="main.js"></script>
+    
+
+  </head>
+
+  <body class="container mt-5"  style="background-image: radial-gradient(ellipse farthest-corner at top, #408ec6, #AC21C8);">
+        
+    <app></app>
+    
+    <!-- Montage -->
+    <script>
+      
+
+      (async () => {
+      riot.register('router', route.Router)
+      riot.register('route', route.Route)
+      await riot.compile()
+
+      let zeub = makeService()
+
+      riot.install(function(component){
+        component.zeub = zeub
+
+        return component
+      })
+      riot.mount('app')
+
+    })()
+    </script>
+
+  </body>
+
+  <footer class="container-fluid mt-5" style="background-color: white;">
+    <div class="text-center">
+            <h6>Projet réalisé par Maxime Hauet</h6>
+    </div>
+    </footer>
+
+  
+</html>

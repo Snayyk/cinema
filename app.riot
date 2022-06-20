@@ -1,0 +1,19 @@
+<app>
+  <router base={base}>
+
+    <route path>
+      <app-main></app-main>
+    </route>
+    <route path="#/film/:detailFilm">
+      <detailFilm id={route.params.detailFilm}></detailFilm>
+    </route>
+    
+  </router>
+  <script>
+    const loc = window.location
+
+    export default {
+	      base: `${loc.pathname}/`
+	    }
+  </script>
+</app>

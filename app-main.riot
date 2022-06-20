@@ -1,0 +1,724 @@
+<app-main>
+  <div class="row pb-5">
+      
+      <div class="col-1">
+        <!-- Bouton oeil -->
+        <button class="btn btn-primary" id="oeil" onclick={ cacherOeil }><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+      </svg></button>
+      </div>
+
+      <div class="col-1"></div>
+
+      <!-- Selection du genre -->
+      <div class="col-3">
+        <select class="form-select" style="background-color: #6883bc;" onchange={setGenre} aria-label="Default select example">
+          <option selected value="null">Catégorie</option>
+          <option each={genre in this.state.genre_film} value={genre.id}>{genre.name}</option>
+        </select>
+      </div>
+
+        <div class="col-1"></div>
+
+        <div class="col-5">
+
+        <!-- barre de recherche -->
+        <div class="d-flex">
+            <input class="form-control me-2" style="background-color: #6883bc;" id="search" type="search" onchange={searchFilm} placeholder="Search" aria-label="Search">
+              <button class="btn btn-primary" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+          </svg></button>
+        </div>
+      </div>   
+
+    </div>  
+
+    <!-- Boutons-->
+    <div class="row pt-5 pb-5">
+
+      <div class="col-2">
+          <button id="pop" onclick={ cacherPop } class="btn btn-primary">Populaires</button>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-2">
+          <button id="best" onclick={ cacherBest } class="btn btn-secondary">Mieux notés</button>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-2">
+          <button id="futur" onclick={ cacherFutur } class="btn btn-secondary">À venir</button>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-2">
+          <button id="affiche" onclick={ cacherAffiche } class="btn btn-secondary">À l'affiche</button>
+      </div>
+    </div>
+
+
+     <!-- Barre de navigation-->
+    <div>
+      <table class="table">
+        <thead class="text-center align-middle">
+          <tr>
+            <th scope="col-2"> <!-- Bouton de trie par notes-->
+              <button class="btn" onclick={trieNote} id="note"><span style="color: white;">Notes</span><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"><path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/></svg>
+              </button>
+            </th>
+            <th scope="col-1"></th> <!-- Espace vide-->
+            <th scope="col-6"> <!-- pages suivantes et précédentes-->
+              <div>
+                <button class="btn" onclick={previousPage}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-double-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                </button>
+                <span class="" style="color: white;">{this.state.page}/{this.state.nombre}</span>
+                <button class="btn" onclick={nextPage}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-chevron-double-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                </button>
+              </div>
+            </th>
+            <th scope="col-1"></th> <!-- Espace vide-->
+            <th scope="col-2"><!-- Bouton de trie par titres-->
+              <button class="btn" onclick={trieTitre} id="titre">
+                <span style="color: white;">Titres</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"><path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/></svg>
+              </button>
+            </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+    <!-- Affichage Films-->
+    <div class="row">
+
+      <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-5" each={film in this.state.liste_film}>
+        <div class="spinner-border" id="spinner" role="status"></div>   
+            <div class="shadow px-2 pt-2 pb-2 rounded-3" style="background-color: #6883bc;">
+              
+                <a href={"./#/film/"+film.id} class="" style="text-decoration: none;">
+                  <h6 class="" style="color: black;">{film.title}</h6>
+                  <img src="https://image.tmdb.org/t/p/w500/{film.poster_path}" class="img-fluid rounded">
+
+                  <div class="infos">
+                    {setStar(film)}
+                    <h6 class="text-center text-dark"><span class="star" each={element in this.state.yellowstar} id="star">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="yellow" class="bi bi-star-fill" viewBox="0 0 16 16"> <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/> </svg></span><span class="star" each={element in this.state.blackstar} id="star">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16"> <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/> </svg></span>{film.vote_average}/10</h6>
+                    
+                    <div class="row">
+                      <div class="text-center col" each= {genre in film.genre_ids}>
+                          <div class="badge bg-success rounded ">{this.state.liste_genres.find(element => element.id == genre).name}
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+            </div>
+        </div> 
+      </div>  
+   
+  
+
+    <script>
+    export default {
+      state: {
+        hiddenOeil: false,
+        hiddenPop: false,
+        hiddenBest: true,
+        hiddenFutur: true,
+        hiddenAffiche: true,
+        page: 0,
+        page_maxi: 0,
+        categorie: 0,
+        liste_film: [],
+        liste_genres: [],
+        yellowstar: [],
+        blackstar: [],
+        genre_id: null,
+        search: [],
+        search_bool: 0,
+        sort_titre_bool: null,
+        sort_note_bool: null
+        
+      },
+      onMounted(){
+        this.getGenre();
+        this.getFilm(1);
+        document.getElementById("spinner").className ="visually-hidden";      
+        
+      },
+      cacherOeil() {//Active ou désactive l'oeil
+
+        this.state.hiddenOeil = !this.state.hiddenOeil
+
+        slash_eye = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16"> <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/> <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/> </svg>'
+        eye = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16"> <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/> <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/> </svg>'
+        black_star = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16"> <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/> </svg>';
+        yellow_star = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-star-fill" viewBox="0 0 16 16"> <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/> </svg>';
+        
+        if(this.state.hiddenOeil) { 
+          document.getElementById("oeil").className = "btn btn-secondary";
+          document.getElementById("oeil").innerHTML = slash_eye;
+
+          let details = document.querySelectorAll('.infos');
+
+          for(var i = 0; i < this.state.liste_film.length;i++){
+            details[i].className = "visually-hidden";
+          }
+          
+        } else {
+          document.getElementById("oeil").className = "btn btn-primary";
+          document.getElementById("oeil").innerHTML = eye;
+
+          let details = document.querySelectorAll('.visually-hidden');
+
+          for(var i = 0; i < this.state.liste_film.length;i++){
+            details[i].className = "infos";
+          }
+          
+        }
+        
+      },
+      cacherPop() {// Active le bouton populaire et désactive les 3 autres
+        
+        if(this.state.hiddenPop == true){
+          this.state.hiddenPop = !this.state.hiddenPop;
+
+         document.getElementById("pop").className = "btn btn-primary"
+
+         document.getElementById("best").className = "btn btn-secondary"
+         document.getElementById("futur").className = "btn btn-secondary"
+         document.getElementById("affiche").className = "btn btn-secondary"
+
+         this.state.hiddenBest = true;
+         this.state.hiddenFutur = true;
+         this.state.hiddenAffiche = true;
+
+         this.state.categorie = 0; 
+         this.state.search_bool = 0;
+         this.state.page = 1;
+         this.getFilm(this.state.page);
+
+        //Va remettre les boutons de trie à null
+         let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+         let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+         document.getElementById("titre").className = "btn";
+         document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;                  
+         
+         document.getElementById("note").className = "btn";
+         document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+
+        this.state.sort_note_bool = null;
+        this.state.sort_titre_bool = null;
+        }
+        
+      },
+      cacherBest() { // Active le bouton mieux noté et désactive les 3 autres
+
+        if(this.state.hiddenBest == true){
+          this.state.hiddenBest = !this.state.hiddenBest;
+
+          document.getElementById("best").className = "btn btn-primary"
+
+         document.getElementById("pop").className = "btn btn-secondary"
+         document.getElementById("futur").className = "btn btn-secondary"
+         document.getElementById("affiche").className = "btn btn-secondary"
+
+         this.state.hiddenPop = true;
+         this.state.hiddenFutur = true;
+         this.state.hiddenAffiche = true;
+
+         this.state.categorie = 1;
+         this.state.search_bool = 0;
+         this.state.page = 1;
+         this.getFilm(this.state.page);
+
+         //Va remettre les boutons de trie à null
+         let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+         let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+         document.getElementById("titre").className = "btn";
+         document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;                  
+         
+         document.getElementById("note").className = "btn";
+         document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+
+         this.state.sort_note_bool = null;
+         this.state.sort_titre_bool = null;
+        }
+
+        
+      },
+      cacherFutur() { // Active le bouton à venir et désactive les 3 autres
+
+        if(this.state.hiddenFutur == true){
+          this.state.hiddenFutur = !this.state.hiddenFutur;
+          
+          document.getElementById("futur").className = "btn btn-primary"
+
+         document.getElementById("pop").className = "btn btn-secondary"
+         document.getElementById("best").className = "btn btn-secondary"
+         document.getElementById("affiche").className = "btn btn-secondary"
+
+         this.state.hiddenPop = true;
+         this.state.hiddenBest = true;
+         this.state.hiddenAffiche = true;
+
+         this.state.categorie = 2;
+         this.state.search_bool = 0;
+         this.state.page = 1;
+         this.getFilm(this.state.page);
+
+         //Va remettre les boutons de trie à null
+         let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+         let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+         document.getElementById("titre").className = "btn";
+         document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;                  
+         
+         document.getElementById("note").className = "btn";
+         document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+
+         this.state.sort_note_bool = null;
+         this.state.sort_titre_bool = null;
+        }
+        
+      },
+      cacherAffiche() { // Active le bouton à l'affiche et désactive les 3 autres
+
+        if(this.state.hiddenAffiche == true){
+          this.state.hiddenAffiche = !this.state.hiddenAffiche;
+
+          document.getElementById("affiche").className = "btn btn-primary"
+
+            document.getElementById("pop").className = "btn btn-secondary"
+           document.getElementById("futur").className = "btn btn-secondary"
+           document.getElementById("best").className = "btn btn-secondary"
+
+           this.state.hiddenPop = true;
+           this.state.hiddenFutur = true;
+           this.state.hiddenBest = true;
+
+           this.state.categorie = 3;
+           this.state.search_bool = 0;
+           this.state.page = 1;
+           this.getFilm(this.state.page);
+
+           //Va remettre les boutons de trie à null
+           let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+           let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+           document.getElementById("titre").className = "btn";
+           document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;                  
+         
+           document.getElementById("note").className = "btn";
+           document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+
+           this.state.sort_note_bool = null;
+           this.state.sort_titre_bool = null;
+        }
+
+      },
+      getGenre(){  //récupère tous les genres 
+        this.zeub.getGenres().then(result => {
+     
+          this.state.genre_film = result.genres;
+          this.state.liste_genres = result.genres;
+         
+          this.update();
+        });      
+      },
+      nextPage(){  //Passe à la page suivante    
+           
+           if(this.state.page < this.state.page_maxi){ //Pour ne pas aller au delà du nombre de page max
+              
+              this.state.page = this.state.page + 1;
+                
+                  if(this.state.search_bool == 1){ //Si la barre de recherche est utilisée
+                    this.search_levrai(this.state.page);
+                  } else {
+                    this.getFilm(this.state.page);
+                  }
+
+                  //Va remettre les boutons de trie à null
+                  let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+                  let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+                  document.getElementById("titre").className = "btn";
+                  document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;                  
+         
+                  document.getElementById("note").className = "btn";
+                  document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+
+                  this.state.sort_note_bool = null;
+                  this.state.sort_titre_bool = null;
+              }
+      },
+      previousPage(){ //Passe à la page précédente
+              
+              if(this.state.page > 1){ //Pour ne pas aller à la page 0...
+                this.state.page = this.state.page - 1;
+                
+                if(this.state.search_bool == 1){//Si la barre de recherche est utilisée
+                    this.search_levrai(this.state.page);
+                  } else {
+                    this.getFilm(this.state.page);
+                  }
+
+                  //Va remettre les boutons de trie à null
+                  let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+                  let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+                  document.getElementById("titre").className = "btn";
+                  document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;                  
+         
+                  document.getElementById("note").className = "btn";
+                  document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+
+                  this.state.sort_note_bool = null;
+                  this.state.sort_titre_bool = null;
+              }
+      },
+      getFilm(lapage){       
+        this.state.page = lapage;
+        if(this.state.categorie == 0){ //Si le bouton populaire est activé
+          this.zeub.getFilmsPop(lapage, this.state.genre_id).then(result => {
+         
+          this.state.page_maxi = result.total_pages;
+          this.state.page = result.page;
+          this.state.nombre = this.state.page_maxi;
+
+          if(this.state.sort_note_bool == true || this.state.sort_note_bool == false){ // Si le bouton de Trie par note est cliqué
+            
+            if(this.state.sort_note_bool == true){ // Si le bouton de Trie par note est vers le haut
+              this.state.liste_film = result.results.sort((a,b) => b.vote_average - a.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre décroissant
+            } else if(this.state.sort_note_bool == false){ // Si le bouton de Trie par note est vers le bas
+              this.state.liste_film = result.results.sort((a,b) => a.vote_average - b.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre croissant
+            } 
+          } else if(this.state.sort_titre_bool == true || this.state.sort_titre_bool == false){ // Si le bouton de Trie par titre est cliqué
+            if(this.state.sort_titre_bool == true){// Si le bouton de Trie par titre est vers le haut // Si le bouton de Trie par titre est vers le haut
+            this.state.liste_film = result.results.sort( (a,b) => {//Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique
+                let aa = a.title.toLowerCase(),
+                    bb = b.title.toLowerCase();
+                if(aa < bb){
+                    return -1;
+                }
+                if(aa > bb){
+                    return 1;
+                }
+                return 0;
+            })
+            } else if(this.state.sort_titre_bool == false){ // Si le bouton de Trie par titre est vers le bas
+              this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique mais dans l'autre sens
+                  let aa = a.title.toLowerCase(),
+                      bb = b.title.toLowerCase();
+                  if(aa > bb){
+                      return -1;
+                  }
+                  if(aa < bb){
+                      return 1;
+                  }
+                  return 0;
+              });
+            }
+          }else {
+            this.state.liste_film = result.results;
+          }
+          this.update();
+        });
+        } else if(this.state.categorie == 1){ //Si le bouton mieux notés est activé
+          this.zeub.getFilmsBest(lapage, this.state.genre_id).then(result => {
+          
+          this.state.page_maxi = result.total_pages;
+          this.state.page = result.page;
+          this.state.nombre = result.total_pages;
+
+          if(this.state.sort_note_bool == true || this.state.sort_note_bool == false){// Si le bouton de Trie par note est cliqué
+            
+            if(this.state.sort_note_bool == true){// Si le bouton de Trie par note est vers le haut
+              this.state.liste_film = result.results.sort((a,b) => b.vote_average - a.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre décroissant
+            } else if(this.state.sort_note_bool == false){// Si le bouton de Trie par note est vers le bas
+              this.state.liste_film = result.results.sort((a,b) => a.vote_average - b.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre croissant
+            } 
+          } else if(this.state.sort_titre_bool == true || this.state.sort_titre_bool == false){
+            if(this.state.sort_titre_bool == true){// Si le bouton de Trie par titre est vers le haut
+            this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique
+                let aa = a.title.toLowerCase(),
+                    bb = b.title.toLowerCase();
+                if(aa < bb){
+                    return -1;
+                }
+                if(aa > bb){
+                    return 1;
+                }
+                return 0;
+            });
+           
+            } else if(this.state.sort_titre_bool == false){// Si le bouton de Trie par titre est vers le bas
+              this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique mais dans l'autre sens
+                  let aa = a.title.toLowerCase(),
+                      bb = b.title.toLowerCase();
+                  if(aa > bb){
+                      return -1;
+                  }
+                  if(aa < bb){
+                      return 1;
+                  }
+                  return 0;
+              });
+            }
+          }else {
+            this.state.liste_film = result.results;
+          }
+          this.update();
+        });  
+        } else if(this.state.categorie == 2){//Si le bouton à venir est activé
+          this.zeub.getFilmsFutur(lapage, this.state.genre_id).then(result => {
+         
+          this.state.page_maxi = result.total_pages;
+          this.state.page = result.page;
+          this.state.nombre = result.total_pages;
+
+          if(this.state.sort_note_bool == true || this.state.sort_note_bool == false){// Si le bouton de Trie par note est cliqué
+            
+            if(this.state.sort_note_bool == true){// Si le bouton de Trie par note est vers le haut
+              this.state.liste_film = result.results.sort((a,b) => b.vote_average - a.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre décroissant
+            } else if(this.state.sort_note_bool == false){// Si le bouton de Trie par note est vers le bas
+              this.state.liste_film = result.results.sort((a,b) => a.vote_average - b.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre croissant
+            } 
+           
+          } else if(this.state.sort_titre_bool == true || this.state.sort_titre_bool == false){
+            if(this.state.sort_titre_bool == true){// Si le bouton de Trie par titre est vers le haut
+            this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique
+                let aa = a.title.toLowerCase(),
+                    bb = b.title.toLowerCase();
+                if(aa < bb){
+                    return -1;
+                }
+                if(aa > bb){
+                    return 1;
+                }
+                return 0;
+            });
+           
+            } else if(this.state.sort_titre_bool == false){// Si le bouton de Trie par titre est vers le bas
+              this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique mais dans l'autre sens
+                  let aa = a.title.toLowerCase(),
+                      bb = b.title.toLowerCase();
+                  if(aa > bb){
+                      return -1;
+                  }
+                  if(aa < bb){
+                      return 1;
+                  }
+                  return 0;
+              });
+            }
+          }else {
+            this.state.liste_film = result.results;
+          }
+
+          this.update();
+        });  
+        } else if(this.state.categorie == 3){ //Si le bouton à l'affiche est activé
+          this.zeub.getFilmsAffiche(lapage, this.state.genre_id).then(result => {
+          
+          this.state.page_maxi = result.total_pages;
+          this.state.page = result.page;
+          this.state.nombre = result.total_pages;
+
+          if(this.state.sort_note_bool == true || this.state.sort_note_bool == false){// Si le bouton de Trie par note est cliqué
+            if(this.state.sort_note_bool == true){// Si le bouton de Trie par note est vers le haut
+              this.state.liste_film = result.results.sort((a,b) => b.vote_average - a.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre décroissant
+            } else if(this.state.sort_note_bool == false){// Si le bouton de Trie par note est vers le bas
+              this.state.liste_film = result.results.sort((a,b) => a.vote_average - b.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre croissant
+            } 
+          } else if(this.state.sort_titre_bool == true || this.state.sort_titre_bool == false){
+            if(this.state.sort_titre_bool == true){// Si le bouton de Trie par titre est vers le haut
+            this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique
+                let aa = a.title.toLowerCase(),
+                    bb = b.title.toLowerCase();
+                if(aa < bb){
+                    return -1;
+                }
+                if(aa > bb){
+                    return 1;
+                }
+                return 0;
+            });
+            } else if(this.state.sort_titre_bool == false){// Si le bouton de Trie par titre est vers le bas
+              this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique mais dans l'autre sens
+                  let aa = a.title.toLowerCase(),
+                      bb = b.title.toLowerCase();
+                  if(aa > bb){
+                      return -1;
+                  }
+                  if(aa < bb){
+                      return 1;
+                  }
+                  return 0;
+              });
+            }
+          }else {
+            this.state.liste_film = result.results;
+          }
+          this.update();
+        });  
+        }
+         
+      },
+      setStar(e){ //Stocke les étoiles jaunes et vide par rapport à la note du film
+
+        let indice = Math.round(e.vote_average);
+        let indicenoir = 10 - indice;
+
+        this.state.yellowstar = Array(indice);
+        this.state.blackstar =  Array(indicenoir);
+           
+      },
+      setGenre(e){ //Filtre par rapport au genre
+        this.state.genre_id = e.target.value;
+        this.getFilm(this.state.page);
+
+        //Va remettre les boutons de trie à null
+        let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+        let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+        document.getElementById("titre").className = "btn";
+        document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;                  
+         
+        document.getElementById("note").className = "btn";
+        document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+
+        this.state.sort_note_bool = null;
+        this.state.sort_titre_bool = null;
+        
+      },
+      search_levrai(lapage){ //Affiche le contenu de la barre de recherche
+        this.state.page = lapage;
+        if(this.state.search == ""){ //Si la barre est vide, "désactive" la recherche et remet tous les films du bouton sélectionné (populaire, mieux notés...)
+          this.state.search_bool = 0;
+          this.getFilm(this.state.page);
+          } else{
+            this.zeub.getFilmSearch(this.state.search,lapage).then(result => {
+            
+            this.state.page_maxi = result.total_pages;
+            this.state.page = result.page;
+            this.state.nombre = result.total_pages;
+            
+            if(this.state.sort_note_bool == true || this.state.sort_note_bool == false){// Si le bouton de Trie par note est cliqué
+            
+            if(this.state.sort_note_bool == true){// Si le bouton de Trie par note est vers le haut
+              this.state.liste_film = result.results.sort((a,b) => b.vote_average - a.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre décroissant
+            } else if(this.state.sort_note_bool == false){// Si le bouton de Trie par note est vers le bas
+              this.state.liste_film = result.results.sort((a,b) => a.vote_average - b.vote_average); //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre croissant
+            } 
+          } else if(this.state.sort_titre_bool == true || this.state.sort_titre_bool == false){
+            if(this.state.sort_titre_bool == true){// Si le bouton de Trie par titre est vers le haut
+            this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique
+                let aa = a.title.toLowerCase(),
+                    bb = b.title.toLowerCase();
+                if(aa < bb){
+                    return -1;
+                }
+                if(aa > bb){
+                    return 1;
+                }
+                return 0;
+            });
+            } else if(this.state.sort_titre_bool == false){// Si le bouton de Trie par titre est vers le bas
+              this.state.liste_film = result.results.sort( (a,b) => { //Fonction prise dans le code d'Esteban Omnes avec son accord | Trie par ordre alphabétique mais dans l'autre sens
+                  let aa = a.title.toLowerCase(),
+                      bb = b.title.toLowerCase();
+                  if(aa > bb){
+                      return -1;
+                  }
+                  if(aa < bb){
+                      return 1;
+                  }
+                  return 0;
+              });
+            }
+          }else {
+            this.state.liste_film = result.results; 
+          }
+            this.update();
+          });
+          }
+      },
+      searchFilm(e){ //Stock le contenu de la barre de recherche et appel search_levrai
+        
+        this.state.search_bool = 1;
+        this.state.page = 1;
+        this.state.search = e.target.value;
+        this.search_levrai(this.state.page);
+
+        },
+        trieNote(){
+          let up = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-up-alt" viewBox="0 0 16 16"> <path d="M3.5 13.5a.5.5 0 0 1-1 0V4.707L1.354 5.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 4.707V13.5zm4-9.5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+          let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+          let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+          
+          if(this.state.sort_note_bool == null){ // Si le bouton de Trie par note n'a pas été cliqué
+            this.state.sort_note_bool = true;
+            this.state.sort_titre_bool = null;
+            document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;
+          } else if(this.state.sort_note_bool == true){
+            this.state.sort_note_bool = false;
+          } else {
+            this.state.sort_note_bool = true;
+            this.state.sort_titre_bool = null;
+            document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;
+          }
+          if(this.state.sort_note_bool == true) {
+          document.getElementById("note").className = "btn";
+          document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+up;
+        } else {
+          document.getElementById("note").className = "btn";
+          document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+        }
+          if(this.state.search_bool = 1){
+            this.search_levrai(this.state.page);
+          } else {
+            this.getFilm(this.state.page);
+          }
+        },
+        trieTitre(){
+          
+          let up = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-up" viewBox="0 0 16 16"> <path d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+          let downTitre = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down" viewBox="0 0 16 16"> <path d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/> </svg>';
+          let downNote = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-sort-down-alt" viewBox="0 0 16 16"> <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/> </svg>';
+
+          if(this.state.sort_titre_bool == null){// Si le bouton de Trie par titre n'a pas été cliqué
+            this.state.sort_titre_bool = true;
+            this.state.sort_note_bool = null;
+            document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+          } else if(this.state.sort_titre_bool == true){
+            this.state.sort_titre_bool = false;
+          } else {
+            this.state.sort_titre_bool = true;
+            this.state.sort_note_bool = null;
+            document.getElementById("note").innerHTML = '<span style="color: white;">Notes</span>'+downNote;
+          }
+          if(this.state.sort_titre_bool == true) {
+          document.getElementById("titre").className = "btn";
+          document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+up;
+        } else {
+          document.getElementById("titre").className = "btn";
+          document.getElementById("titre").innerHTML = '<span style="color: white;">Titres</span>'+downTitre;
+        }
+        if(this.state.search_bool = 1){
+          this.search_levrai(this.state.page);
+        } else {
+          this.getFilm(this.state.page);
+        }
+        }
+    }
+  </script>
+  <style>
+  #search::placeholder{
+    color: white;
+  }
+  </style>
+</app-main>
